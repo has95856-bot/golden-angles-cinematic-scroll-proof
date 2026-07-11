@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <title>Golden Angles — Cinematic Scroll Proof</title>
+  <meta name="description" content="نموذج إثبات لتجربة Golden Angles السينمائية: فيلم Higgsfield يتحرك مع السكرول.">
+  <script>document.documentElement.classList.add('js')</script>
+  <style>
+    @font-face{font-family:Rabie;src:url('assets/fonts/Rabie-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+    @font-face{font-family:Rabie;src:url('assets/fonts/Rabie-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+    @font-face{font-family:Cairo;src:url('assets/fonts/Cairo-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+    @font-face{font-family:Cairo;src:url('assets/fonts/Cairo-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+    :root{
+      --navy:#07111f;--blue:#102a44;--gold:#faa51c;--ember:#d65a0b;--paper:#f5ead2;
+      --ink:#07111f;--white:#fffaf0;--muted:rgba(255,250,240,.64);--line:rgba(255,255,255,.16);
+      --ease:cubic-bezier(.22,.8,.2,1)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:var(--navy)}
+    body{margin:0;background:var(--navy);color:var(--white);font-family:Rabie,Cairo,sans-serif;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    button,a{touch-action:manipulation}
+    img{display:block;max-width:100%}
+    .en{font-family:Montserrat,sans-serif;direction:ltr;unicode-bidi:isolate;text-transform:uppercase;letter-spacing:.14em}
+    .skip{position:fixed;z-index:1000;top:8px;right:8px;transform:translateY(-160%);background:var(--gold);color:#07111f;padding:12px 16px}
+    .skip:focus{transform:none}
+
+    .noise{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.055;mix-blend-mode:soft-light;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+    .rail{position:fixed;z-index:80;left:24px;top:50%;transform:translateY(-50%);display:grid;gap:10px;pointer-events:none}
+    .rail i{display:block;width:3px;height:28px;background:rgba(255,255,255,.16);overflow:hidden}
+    .rail i::after{content:"";display:block;width:100%;height:var(--p,0%);background:var(--gold)}
+
+    header{position:fixed;z-index:100;top:0;left:0;right:0;height:86px;padding:16px clamp(18px,3vw,52px);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(7,17,31,.76),transparent);transition:transform .55s var(--ease),background .35s}
+    header.scrolled{background:rgba(7,17,31,.72);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.1)}
+    header.hidden{transform:translateY(-110%)}
+    .brand{display:flex;align-items:center;gap:12px;direction:ltr}
+    .brand img{width:50px;height:50px;object-fit:contain;filter:drop-shadow(0 10px 24px rgba(250,165,28,.16))}
+    .brand-copy{display:grid;gap:3px}
+    .brand-copy b{font:700 13px/1 Montserrat,sans-serif;letter-spacing:.16em}
+    .brand-copy small{font-size:11px;color:var(--gold)}
+    .header-note{font:400 10px/1 Montserrat,sans-serif;letter-spacing:.18em;color:rgba(255,255,255,.58);direction:ltr}
+    .header-cta{min-height:46px;padding:0 18px;display:grid;place-items:center;border:1px solid rgba(250,165,28,.54);font-size:13px;transition:background .25s,color .25s}
+    .header-cta:hover,.header-cta:focus-visible{background:var(--gold);color:var(--navy)}
+
+    .hero{position:relative;min-height:100svh;overflow:hidden;display:grid;align-items:end;background:#07111f;isolation:isolate}
+    .hero-media{position:absolute;inset:0;z-index:-4;overflow:hidden}
+    .hero-media img{width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.035);filter:saturate(.84) contrast(1.08)}
+    .hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,17,31,.96) 0%,rgba(7,17,31,.58) 40%,rgba(7,17,31,.08) 72%),linear-gradient(0deg,rgba(7,17,31,.96) 0%,transparent 42%)}
+    .hero-lines{position:absolute;z-index:-2;inset:0;opacity:.48;background:linear-gradient(108deg,transparent 0 46%,rgba(250,165,28,.56) 46.08% 46.18%,transparent 46.26%),linear-gradient(72deg,transparent 0 72%,rgba(250,165,28,.28) 72.08% 72.15%,transparent 72.23%);transform-origin:center}
+    .hero-orbit{position:absolute;z-index:-1;width:min(54vw,680px);aspect-ratio:1;border:1px solid rgba(250,165,28,.35);border-radius:50%;left:51%;top:54%;transform:translate(-50%,-50%) rotate(-18deg)}
+    .hero-orbit::before,.hero-orbit::after{content:"";position:absolute;inset:12%;border:1px solid rgba(250,165,28,.18);border-radius:50%}
+    .hero-orbit::after{inset:28%;border-color:rgba(255,255,255,.16)}
+    .hero-copy{width:min(1180px,calc(100% - 48px));margin:0 auto;padding:150px 0 9vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.46fr);gap:8vw;align-items:end;position:relative}
+    .eyebrow{display:flex;align-items:center;gap:12px;color:var(--gold);font:700 10px/1 Montserrat,sans-serif;letter-spacing:.18em;direction:ltr}
+    .eyebrow::before{content:"";width:42px;height:1px;background:currentColor}
+    h1{font-size:clamp(54px,7.4vw,116px);line-height:.88;letter-spacing:-.045em;margin:28px 0 30px;max-width:850px;text-wrap:balance}
+    h1 span{display:block;color:var(--gold)}
+    .hero-copy p{font-size:clamp(17px,1.4vw,22px);line-height:1.8;color:rgba(255,250,240,.76);max-width:600px;margin:0}
+    .hero-side{align-self:end;border-right:1px solid rgba(255,255,255,.18);padding-right:22px;display:grid;gap:22px}
+    .hero-side .index{font:700 64px/1 Montserrat,sans-serif;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.42)}
+    .hero-side p{font-size:14px;line-height:1.7;margin:0;color:rgba(255,255,255,.62)}
+    .scroll-cue{display:flex;align-items:center;gap:12px;font:700 10px/1 Montserrat,sans-serif;letter-spacing:.16em;direction:ltr;color:var(--gold)}
+    .scroll-cue i{width:1px;height:44px;background:linear-gradient(var(--gold),transparent);animation:cue 1.7s ease-in-out infinite}
+    @keyframes cue{50%{transform:scaleY(.38);transform-origin:top}}
+
+    .interlude{position:relative;min-height:68svh;background:var(--paper);color:var(--ink);display:grid;align-items:center;padding:12vh clamp(24px,7vw,110px);overflow:hidden}
+    .interlude::after{content:"";position:absolute;left:-12vw;bottom:-36%;width:58vw;aspect-ratio:1;background:url('assets/gold_geometry.png') center/contain no-repeat;opacity:.12;transform:rotate(12deg)}
+    .interlude-inner{width:min(1180px,100%);margin:auto;display:grid;grid-template-columns:.6fr 1.4fr;gap:8vw;align-items:end;position:relative;z-index:1}
+    .interlude .marker{font:700 clamp(74px,12vw,180px)/.8 Montserrat,sans-serif;color:transparent;-webkit-text-stroke:1px rgba(7,17,31,.2);direction:ltr}
+    .interlude h2{font-size:clamp(46px,6.6vw,98px);line-height:.96;letter-spacing:-.04em;margin:0;text-wrap:balance}
+    .interlude h2 em{font-style:normal;color:var(--ember)}
+    .interlude p{font-size:clamp(16px,1.2vw,20px);line-height:1.9;max-width:660px;color:#526072;margin:32px 0 0}
+
+    .film{height:560vh;position:relative;background:var(--navy)}
+    .film-stage{position:sticky;top:0;height:100svh;overflow:hidden;background:#07111f;isolation:isolate}
+    #filmCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;background:#07111f}
+    .film-matte{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(7,17,31,.82) 0%,rgba(7,17,31,.18) 42%,transparent 70%),linear-gradient(0deg,rgba(7,17,31,.82),transparent 34%,rgba(7,17,31,.32));z-index:2}
+    .film-top{position:absolute;z-index:4;top:112px;right:clamp(24px,5vw,76px);left:clamp(24px,5vw,76px);display:flex;align-items:center;justify-content:space-between;direction:ltr}
+    .film-label{font:700 10px/1 Montserrat,sans-serif;letter-spacing:.18em;color:var(--gold)}
+    .film-count{font:400 11px/1 Montserrat,sans-serif;color:rgba(255,255,255,.58);font-variant-numeric:tabular-nums}
+    .loader{position:absolute;z-index:7;inset:0;background:#07111f;display:grid;place-items:center;transition:opacity .7s var(--ease),visibility .7s}
+    .loader.done{opacity:0;visibility:hidden}
+    .loader-box{display:grid;gap:18px;text-align:center;min-width:240px}
+    .loader-logo{width:70px;margin:auto;filter:drop-shadow(0 12px 28px rgba(250,165,28,.22))}
+    .loader-track{height:2px;background:rgba(255,255,255,.14);overflow:hidden}
+    .loader-track i{display:block;height:100%;width:var(--load,0%);background:var(--gold);transition:width .2s}
+    .loader-text{font:700 10px/1 Montserrat,sans-serif;letter-spacing:.16em;color:var(--gold);direction:ltr}
+    .chapters{position:absolute;z-index:4;inset:0;pointer-events:none}
+    .chapter{position:absolute;right:clamp(24px,6vw,92px);bottom:10vh;width:min(620px,calc(100vw - 48px));opacity:0;transform:translateY(24px);transition:opacity .4s,transform .55s var(--ease)}
+    .chapter.active{opacity:1;transform:none}
+    .chapter .num{font:700 11px/1 Montserrat,sans-serif;color:var(--gold);letter-spacing:.18em;direction:ltr}
+    .chapter h3{font-size:clamp(42px,5.4vw,82px);line-height:1;letter-spacing:-.04em;margin:18px 0 18px;text-wrap:balance}
+    .chapter p{max-width:520px;font-size:clamp(15px,1.2vw,19px);line-height:1.75;color:rgba(255,255,255,.7);margin:0}
+    .film-progress{position:absolute;z-index:4;left:clamp(24px,4vw,62px);bottom:9vh;height:180px;width:1px;background:rgba(255,255,255,.2);direction:ltr}
+    .film-progress i{display:block;width:3px;margin-left:-1px;height:var(--film-progress,0%);background:var(--gold)}
+    .film-progress b{position:absolute;left:-15px;top:calc(var(--film-progress,0%) - 4px);width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 7px rgba(250,165,28,.12)}
+
+    .evidence{min-height:120svh;background:var(--paper);color:var(--ink);position:relative;overflow:hidden;padding:12vh clamp(24px,6vw,92px);display:grid;align-items:center}
+    .evidence-grid{width:min(1320px,100%);margin:auto;display:grid;grid-template-columns:1.28fr .72fr;gap:clamp(40px,7vw,110px);align-items:center}
+    .evidence-visual{position:relative;min-height:72svh;display:grid;place-items:center;background:linear-gradient(145deg,#fff 0%,#dfe3e6 100%);overflow:hidden;clip-path:polygon(0 0,92% 0,100% 11%,100% 100%,8% 100%,0 89%)}
+    .evidence-visual img{width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;transform:scale(1.02)}
+    .evidence-visual::after{content:"";position:absolute;inset:0;border:1px solid rgba(7,17,31,.16);pointer-events:none}
+    .evidence-copy{align-self:center}
+    .evidence-copy .en{font-size:10px;font-weight:700;color:var(--ember)}
+    .evidence h2{font-size:clamp(48px,6vw,90px);line-height:.96;letter-spacing:-.045em;margin:26px 0 32px}
+    .evidence h2 span{color:var(--ember)}
+    .evidence p{font-size:clamp(16px,1.2vw,20px);line-height:1.9;color:#526072;margin:0 0 34px}
+    .evidence-meta{display:grid;border-top:1px solid rgba(7,17,31,.2)}
+    .evidence-meta div{display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(7,17,31,.12);font-size:13px}
+    .evidence-meta span:last-child{font-family:Montserrat,sans-serif;font-size:10px;letter-spacing:.12em;direction:ltr;color:#596579}
+
+    .proof-end{min-height:76svh;position:relative;display:grid;place-items:center;text-align:center;padding:12vh 24px;background:#07111f;overflow:hidden}
+    .proof-end::before{content:"";position:absolute;width:80vw;aspect-ratio:1;border:1px solid rgba(250,165,28,.22);transform:rotate(45deg);animation:spin 24s linear infinite}
+    .proof-end::after{content:"";position:absolute;width:42vw;aspect-ratio:1;background:radial-gradient(circle,rgba(250,165,28,.18),transparent 64%)}
+    @keyframes spin{to{transform:rotate(405deg)}}
+    .proof-end-inner{position:relative;z-index:2;max-width:900px}
+    .proof-end h2{font-size:clamp(48px,7vw,104px);line-height:.96;letter-spacing:-.045em;margin:20px 0 28px}
+    .proof-end p{font-size:18px;line-height:1.8;color:rgba(255,255,255,.68);max-width:680px;margin:0 auto 38px}
+    .proof-end a{display:inline-grid;place-items:center;min-height:54px;padding:0 28px;background:var(--gold);color:var(--navy);font-weight:700}
+
+    @media (max-width:760px){
+      header{height:74px;padding:12px 14px}.brand-copy,.header-note{display:none}.brand img{width:44px;height:44px}.header-cta{min-height:44px;padding:0 14px;font-size:12px}
+      .rail{display:none}.hero{min-height:100svh}.hero-media img{object-position:60% center}.hero-media::after{background:linear-gradient(0deg,rgba(7,17,31,.98) 0%,rgba(7,17,31,.7) 46%,rgba(7,17,31,.18) 100%)}
+      .hero-orbit{width:110vw;left:48%;top:37%}.hero-copy{width:calc(100% - 28px);padding:106px 0 7vh;display:block}.hero-copy h1{font-size:clamp(47px,15vw,72px);line-height:.91;margin-top:22px}.hero-copy p{font-size:15px;line-height:1.7}.hero-side{margin-top:42px;grid-template-columns:auto 1fr;align-items:center}.hero-side .index{font-size:44px}.hero-side p{display:none}.scroll-cue{justify-self:end}
+      .interlude{min-height:86svh;padding:12vh 20px}.interlude-inner{display:block}.interlude .marker{font-size:82px;margin-bottom:30px}.interlude h2{font-size:clamp(48px,14vw,70px)}.interlude p{font-size:15px}
+      .film{height:560vh}.film-matte{background:linear-gradient(0deg,rgba(7,17,31,.96) 0%,rgba(7,17,31,.68) 30%,rgba(7,17,31,.04) 64%,rgba(7,17,31,.25) 100%)}.film-top{top:94px;right:18px;left:18px}.chapter{right:18px;bottom:7vh;width:calc(100vw - 36px)}.chapter h3{font-size:clamp(38px,11vw,54px);line-height:1.02}.chapter p{font-size:14px;line-height:1.65;max-width:92%}.film-progress{left:16px;bottom:8vh;height:132px}
+      .evidence{padding:11vh 18px}.evidence-grid{display:flex;flex-direction:column}.evidence-visual{width:100%;min-height:52svh;order:2}.evidence-copy{order:1}.evidence h2{font-size:clamp(48px,14vw,70px)}
+      .proof-end{min-height:84svh}.proof-end h2{font-size:clamp(46px,14vw,74px)}.proof-end p{font-size:16px}
+    }
+    @media (prefers-reduced-motion:reduce){
+      *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+      .hero-lines,.hero-orbit{transform:none!important}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">انتقل إلى المحتوى</a>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="rail" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <header id="header">
+    <a class="brand" href="#top" aria-label="Golden Angles — الرئيسية">
+      <img src="assets/golden_angles_logo.png" alt="">
+      <span class="brand-copy"><b>GOLDEN ANGLES</b><small>الزوايا الذهبية</small></span>
+    </a>
+    <span class="header-note">CINEMATIC REBUILD · SCROLL PROOF 01</span>
+    <a class="header-cta" href="#proof">اختبر الحركة</a>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="heroTitle">
+      <div class="hero-media"><img id="heroImage" src="assets/oman_immersive.png" alt="مشهد عُماني غامر يدمج جبال عُمان والبحر مع تقنيات الواقع الممتد"></div>
+      <div class="hero-lines" aria-hidden="true"></div><div class="hero-orbit" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <div>
+          <div class="eyebrow">OMAN · IMMERSIVE · CINEMATIC</div>
+          <h1 id="heroTitle">حين تتغيّر الزاوية، <span>يتغيّر المكان.</span></h1>
+          <p>لا نقدّم قائمة خدمات. نبني رحلة تبدأ من المكان الحقيقي، ثم تعبر التصوير والدرون و360° والواقع الممتد حتى تصبح تجربة يعيشها الجمهور.</p>
+        </div>
+        <aside class="hero-side" aria-label="بداية الرحلة">
+          <span class="index">00</span>
+          <p>هذا نموذج اتجاه جديد من الصفر: صورة، حركة، هوية، وتقنية تعمل مع السكرول.</p>
+          <span class="scroll-cue"><i></i>SCROLL TO TRANSFORM</span>
+        </aside>
+      </div>
+    </section>
+
+    <section class="interlude" aria-labelledby="interludeTitle">
+      <div class="interlude-inner">
+        <div class="marker" aria-hidden="true">01</div>
+        <div><div class="eyebrow">THE ANGLE IS THE METHOD</div><h2 id="interludeTitle">لا نشاهد المشهد فقط. <em>ندخل داخله.</em></h2><p>كل حركة في الفيلم التالي جاءت من أصل فيديو حقيقي أُنتج عبر Higgsfield/Seedance للزوايا الذهبية، ثم تحوّل إلى 121 إطاراً مستقلاً يتحكم فيها السكرول مباشرة.</p></div>
+      </div>
+    </section>
+
+    <section class="film" id="proof" aria-label="فيلم يتحرك مع السكرول">
+      <div class="film-stage">
+        <canvas id="filmCanvas" aria-label="تسلسل سينمائي عُماني متحكم به عبر السكرول"></canvas>
+        <div class="film-matte" aria-hidden="true"></div>
+        <div class="loader" id="loader" role="status" aria-live="polite"><div class="loader-box"><img class="loader-logo" src="assets/golden_angles_logo.png" alt=""><div class="loader-track"><i id="loaderBar"></i></div><span class="loader-text" id="loaderText">LOADING FILM · 0%</span></div></div>
+        <div class="film-top"><span class="film-label">HIGGSFIELD FILM · 121 FRAMES</span><span class="film-count" id="frameCount">000 / 120</span></div>
+        <div class="chapters" aria-live="polite">
+          <article class="chapter active" data-from="0" data-to=".24"><span class="num">01 / PLACE</span><h3>نبدأ بالمكان.</h3><p>أرض، بحر، جبل، وتفاصيل عُمانية حقيقية هي المادة الأولى للتجربة.</p></article>
+          <article class="chapter" data-from=".24" data-to=".49"><span class="num">02 / CAPTURE</span><h3>نكشف الزاوية التي لا تُرى.</h3><p>تصوير جوي، 360° ومسح بصري يلتقطان المكان كمساحة يمكن استكشافها.</p></article>
+          <article class="chapter" data-from=".49" data-to=".75"><span class="num">03 / IMMERSION</span><h3>نبني عالماً داخل العالم.</h3><p>تتحول اللقطة إلى طبقات، والطبقات إلى تجربة واقع ممتد محاطة بالصوت والحركة.</p></article>
+          <article class="chapter" data-from=".75" data-to="1.01"><span class="num">04 / EXPERIENCE</span><h3>ثم يصبح الجمهور جزءاً منها.</h3><p>تجربة قابلة للعرض في وجهة، معرض، فعالية أو منصة رقمية — وليست مجرد فيديو يُشاهد.</p></article>
+        </div>
+        <div class="film-progress" aria-hidden="true"><i id="filmProgress"></i><b id="filmDot"></b></div>
+      </div>
+    </section>
+
+    <section class="proof-end" id="proofEnd" aria-labelledby="proofEndTitle"><div class="proof-end-inner"><div class="eyebrow" style="justify-content:center">PROOF 01 · DIRECTION GATE</div><h2 id="proofEndTitle">هذه ليست النسخة النهائية. هذه هي <span style="color:var(--gold)">لغة الموقع الجديدة.</span></h2><p>بعد اعتماد حركة السكرول والاتجاه البصري، تُبنى النسخة الكاملة بأفلام Higgsfield متصلة، أعمال المؤسسة الحقيقية، Project Reel تفاعلي، ونموذج مشروع ذكي.</p><a href="https://wa.me/96895856101" target="_blank" rel="noopener">ابدأ مشروعاً مع Golden Angles</a></div></section>
+  </main>
+
+  <script>
+  (()=>{
+    const FRAME_COUNT=121;
+    const frames=Array(FRAME_COUNT);
+    const loaded=new Set();
+    const canvas=document.getElementById('filmCanvas');
+    const ctx=canvas.getContext('2d',{alpha:false,desynchronized:true});
+    const film=document.querySelector('.film');
+    const loader=document.getElementById('loader');
+    const loaderBar=document.getElementById('loaderBar');
+    const loaderText=document.getElementById('loaderText');
+    const countEl=document.getElementById('frameCount');
+    const chapters=[...document.querySelectorAll('.chapter')];
+    const progressEl=document.getElementById('filmProgress');
+    const progressDot=document.getElementById('filmDot');
+    const rail=[...document.querySelectorAll('.rail i')];
+    let current=0,target=0,lastDraw=-1,raf=0,ready=false,lastScroll=0;
+
+    const pad=n=>String(n).padStart(3,'0');
+    const clamp=(n,a=0,b=1)=>Math.min(b,Math.max(a,n));
+    const nearestLoaded=index=>{
+      if(loaded.has(index)) return index;
+      for(let d=1;d<FRAME_COUNT;d++){
+        if(loaded.has(index-d)) return index-d;
+        if(loaded.has(index+d)) return index+d;
+      }
+      return -1;
+    };
+    function sizeCanvas(){
+      const dpr=Math.min(devicePixelRatio||1,2),r=canvas.getBoundingClientRect();
+      canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);lastDraw=-1;draw(Math.round(current));
+    }
+    function draw(index){
+      const idx=nearestLoaded(clamp(index,0,FRAME_COUNT-1));if(idx<0||idx===lastDraw)return;
+      const im=frames[idx];if(!im||!im.complete)return;
+      const cw=canvas.clientWidth,ch=canvas.clientHeight,iw=im.naturalWidth,ih=im.naturalHeight;
+      ctx.fillStyle='#07111f';ctx.fillRect(0,0,cw,ch);
+      const mobile=matchMedia('(max-width:760px)').matches;
+      let s,dx,dy;
+      if(mobile){s=Math.min(cw*.95/iw,ch*.58/ih);dx=(cw-iw*s)/2;dy=ch*.46-ih*s/2;}
+      else{s=Math.max(cw/iw,ch/ih);dx=(cw-iw*s)/2;dy=(ch-ih*s)/2;}
+      ctx.drawImage(im,dx,dy,iw*s,ih*s);lastDraw=idx;
+      countEl.textContent=`${pad(idx)} / ${pad(FRAME_COUNT-1)}`;
+    }
+    function updateUI(p){
+      progressEl.style.height=`${p*100}%`;progressDot.style.top=`calc(${p*100}% - 4px)`;
+      chapters.forEach(c=>c.classList.toggle('active',p>=+c.dataset.from&&p<+c.dataset.to));
+      rail.forEach((r,i)=>r.style.setProperty('--p',`${clamp(p*3-i)*100}%`));
+    }
+    function filmProgressFromScroll(){
+      const r=film.getBoundingClientRect();return clamp((-r.top)/(film.offsetHeight-innerHeight));
+    }
+    function tick(){
+      const delta=target-current;current+=delta*(Math.abs(delta)>.045?.15:.24);
+      if(Math.abs(delta)<.00015)current=target;
+      draw(Math.round(current*(FRAME_COUNT-1)));updateUI(current);
+      raf=requestAnimationFrame(tick);
+    }
+    function onScroll(){
+      target=filmProgressFromScroll();
+      const y=scrollY,header=document.getElementById('header');header.classList.toggle('scrolled',y>40);header.classList.toggle('hidden',y>lastScroll&&y>240&&!film.matches(':hover'));lastScroll=y;
+    }
+    function loadFrames(){
+      let completed=0;
+      return Promise.all(Array.from({length:FRAME_COUNT},(_,i)=>new Promise(resolve=>{
+        const im=new Image();frames[i]=im;im.decoding='async';
+        const done=()=>{completed++;loaded.add(i);const pct=Math.round(completed/FRAME_COUNT*100);loaderBar.style.setProperty('--load',pct+'%');loaderBar.style.width=pct+'%';loaderText.textContent=`LOADING FILM · ${pct}%`;if(i===0)draw(0);resolve()};
+        im.onload=done;im.onerror=()=>{completed++;resolve()};im.src=`assets/frames/f${pad(i)}.jpg`;
+      })));
+    }
+    window.__filmSeek=p=>{target=current=clamp(Number(p)||0);const top=film.offsetTop+target*(film.offsetHeight-innerHeight);scrollTo({top,behavior:'instant'});draw(Math.round(current*(FRAME_COUNT-1)));updateUI(current)};
+    addEventListener('resize',sizeCanvas,{passive:true});addEventListener('scroll',onScroll,{passive:true});
+    document.querySelector('.hero').addEventListener('pointermove',e=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;document.querySelector('.hero-lines').style.transform=`translate(${x*16}px,${y*12}px)`;document.querySelector('.hero-orbit').style.translate=`${x*-12}px ${y*-8}px`;});
+    sizeCanvas();onScroll();tick();
+    loadFrames().then(()=>{ready=true;loader.classList.add('done');loaderText.textContent='FILM READY · 100%';draw(Math.round(current*(FRAME_COUNT-1)));const seek=new URLSearchParams(location.search).get('seek');if(seek!==null)setTimeout(()=>window.__filmSeek(seek),100)});
+    setTimeout(()=>{if(!ready){loader.classList.add('done');draw(0)}},9000);
+  })();
+  </script>
+</body>
+</html>
